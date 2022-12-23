@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Error from "./Error";
 
 const Formulario = ({ pacientes, setPacientes }) => {
   const [nombre, setNombre] = useState("");
@@ -8,6 +9,12 @@ const Formulario = ({ pacientes, setPacientes }) => {
   const [sintomas, setSintomas] = useState("");
 
   const [error, setError] = useState(false);
+
+  const generarId = () => {
+      const random = Math.random().toString(36).substring(2);
+      const fecha = Date.now().toString(36);
+      return random + fecha
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,10 +35,18 @@ const Formulario = ({ pacientes, setPacientes }) => {
       propietario,
       email,
       fecha,
-      sintomas
+      sintomas,
+      id: generarId()
     };
     //Tomamos copia del array de pacientes que exista y le añadimos el nuevo paciente
     setPacientes([...pacientes, paciente]);
+
+    //Vaciar el formulario
+    setNombre("");
+    setPropietario("");
+    setEmail("");
+    setFecha("");
+    setSintomas("");
   };
 
   return (
@@ -46,11 +61,7 @@ const Formulario = ({ pacientes, setPacientes }) => {
         className="bg-white shadow-md rounded-lg py-10 px-5 mb-10"
         onSubmit={handleSubmit}
       >
-        {error && (
-          <div className="bg-red-800 text-white text-center p-3 uppercase font-bold mb-3 rounded">
-            <p>Todos los campos son obligatorios.</p>
-          </div>
-        )}
+        {error && <Error mensaje="Todos los campos son obligatorios." />}
         <div className="mb-5">
           <label
             htmlFor="mascota"
